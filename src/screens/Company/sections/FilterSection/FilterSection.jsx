@@ -6,13 +6,16 @@ import {
   MenuItem,
   Typography,
   InputAdornment,
-  Button
+  Button,
+  CircularProgress,
+  Divider,
 } from "@mui/material";
 
 import BusinessIcon from "@mui/icons-material/Business";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Link, useLocation } from "react-router-dom";
+import DownloadIcon from "@mui/icons-material/Download";
 
+import { useLocation } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export const FilterSection = ({
@@ -23,13 +26,28 @@ export const FilterSection = ({
   setStartDate,
   endDate,
   setEndDate,
+  loading,
+  searchQuery,
+  setSearchQuery,
+  recordCount,
 }) => {
   const location = useLocation();
 
+  const pathname = location.pathname;
+
   const hidePeriod =
-    location.pathname === "/vessels" ||
-    location.pathname === "/" ||
-    location.pathname.startsWith("/vessel");
+    pathname === "/" ||
+    pathname === "/vessels" ||
+    pathname.startsWith("/vessel");
+
+  const isLedgerPage = pathname === "/general-ledger";
+  const isOpenBillPage = pathname === "/openbillrequest";
+
+  const selectLabel = isLedgerPage
+    ? "Select Document No"
+    : isOpenBillPage
+    ? "Select Vendor Company"
+    : "Select Company";
 
   return (
     <Box
@@ -38,7 +56,7 @@ export const FilterSection = ({
         top: 96,
         height: "calc(100vh - 110px)",
         overflowY: "auto",
-        bgcolor: "white",
+        bgcolor: "#f5f5f5ff",
         borderRight: 1,
         borderColor: "divider",
         p: 3,
@@ -52,13 +70,16 @@ export const FilterSection = ({
         Filter
       </Typography>
 
-      {/* Company Filter */}
+      <Divider />
+
+      {/* Company / Document / Vendor Filter */}
       <Stack spacing={1}>
-        <Typography>Select Company</Typography>
+        <Typography>{selectLabel}</Typography>
 
         <TextField
           select
-          value={selectedCompany}
+          size="small"
+          value={selectedCompany || "All"}
           onChange={(e) => setSelectedCompany(e.target.value)}
           InputProps={{
             startAdornment: (
@@ -68,23 +89,27 @@ export const FilterSection = ({
             ),
           }}
           SelectProps={{ IconComponent: ExpandMoreIcon }}
-          size="small"
         >
-          {companies.map((c, idx) => (
-            <MenuItem key={idx} value={c}>
-              {c}
-            </MenuItem>
-          ))}
+          <MenuItem value="All">All</MenuItem>
+
+          {companies
+            .filter((c) => c !== "All")
+            .map((c, i) => (
+              <MenuItem key={i} value={c}>
+                {c}
+              </MenuItem>
+            ))}
         </TextField>
       </Stack>
 
       {/* Period Filter */}
       {!hidePeriod && (
         <Stack spacing={1}>
+          <Divider />
           <Typography>Period</Typography>
 
           <DatePicker
-            label="Select Month"
+            label="Start Month"
             views={["year", "month"]}
             openTo="month"
             value={startDate}
@@ -100,6 +125,8 @@ export const FilterSection = ({
             }}
           />
 
+          <Divider />
+
           <DatePicker
             label="End Month"
             views={["year", "month"]}
@@ -110,41 +137,65 @@ export const FilterSection = ({
         </Stack>
       )}
 
+      <Divider />
+
+      {/* Total Records */}
+      {recordCount !== undefined && (
+        <Typography variant="body2" color="text.secondary">
+          Total Records: {recordCount}
+        </Typography>
+      )}
+
       {/* Reset Button */}
       <Button
-        variant="contained"
-        color="primary"
+        variant="outlined"
         sx={{
           textTransform: "none",
-          borderRadius: "8px",
           fontWeight: 600,
-          mt: 1,
-          mb: 3
+          borderRadius: "8px",
+          color:"#184a70ff",
+          borderColor:"#184a70ff"
         }}
         onClick={() => {
           setSelectedCompany("All");
           setStartDate(null);
           setEndDate(null);
+          setSearchQuery("");
         }}
       >
         Reset Filters
       </Button>
 
-      {/* Navigation Links */}
-      <Stack
+      {/* Loader */}
+      {loading && (
+        <Stack alignItems="center" spacing={1}>
+          <CircularProgress size={26} />
+          <Typography fontSize={13} color="text.secondary">
+            Loading data...
+          </Typography>
+        </Stack>
+      )}
+
+      {/* Download */}
+      <Button
+        startIcon={<DownloadIcon />}
         sx={{
           mt: "auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: 2,
-          fontSize: "16px",
+          textTransform: "none",
+          fontWeight: 600,
+          borderRadius: "10px",
+          py: 1.2,
+          color:"#184a70ff",
+          border: "1px dashed #184a70ff",
+          bgcolor: "#f5f7ff",
+          "&:hover": {
+            bgcolor: "#eef2ff",
+            borderStyle: "solid",
+          },
         }}
       >
-        <Link to="/">home</Link>
-        <Link to="/vessel">Vessels</Link>
-        <Link to="/general-ledger">General Ledger</Link>
-        <Link to="/openbillrequest">Open Bill Request</Link>
-      </Stack>
+        Download Report
+      </Button>
     </Box>
   );
 };

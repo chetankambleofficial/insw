@@ -16,73 +16,16 @@
         "/"
       ],
       "isRoot": true
+    },
+    {
+      "id": "src/screens/Company/sections/uploadExcel/uploadExcel.jsx",
+      "label": "uploadExcel",
+      "routes": [
+        "/uploadExcel"
+      ]
     }
   ],
   "edges": [
-    {
-      "id": "src\\screens\\Company\\sections\\FilterSection\\FilterSection.jsx:143:8-to-src\\Dashboard.jsx",
-      "source": "src\\screens\\Company\\App.jsx",
-      "target": "src\\Dashboard.jsx",
-      "data": {
-        "viaRoute": "/",
-        "trigger": {
-          "element": "<Link to=\"/\">home</Link>",
-          "line": 143,
-          "endLine": 143,
-          "column": 8,
-          "endColumn": 32,
-          "sourceFile": "src\\screens\\Company\\sections\\FilterSection\\FilterSection.jsx"
-        }
-      }
-    },
-    {
-      "id": "src\\screens\\Company\\sections\\FilterSection\\FilterSection.jsx:144:8-to-src\\screens\\Company\\App.jsx",
-      "source": "src\\screens\\Company\\App.jsx",
-      "target": "src\\screens\\Company\\App.jsx",
-      "data": {
-        "viaRoute": "/vessel",
-        "trigger": {
-          "element": "<Link to=\"/vessel\">Vessels</Link>",
-          "line": 144,
-          "endLine": 144,
-          "column": 8,
-          "endColumn": 41,
-          "sourceFile": "src\\screens\\Company\\sections\\FilterSection\\FilterSection.jsx"
-        }
-      }
-    },
-    {
-      "id": "src\\screens\\Company\\sections\\FilterSection\\FilterSection.jsx:145:8-to-src\\screens\\Company\\App.jsx",
-      "source": "src\\screens\\Company\\App.jsx",
-      "target": "src\\screens\\Company\\App.jsx",
-      "data": {
-        "viaRoute": "/general-ledger",
-        "trigger": {
-          "element": "<Link to=\"/general-ledger\">General Ledger</Link>",
-          "line": 145,
-          "endLine": 145,
-          "column": 8,
-          "endColumn": 56,
-          "sourceFile": "src\\screens\\Company\\sections\\FilterSection\\FilterSection.jsx"
-        }
-      }
-    },
-    {
-      "id": "src\\screens\\Company\\sections\\FilterSection\\FilterSection.jsx:146:8-to-src\\screens\\Company\\App.jsx",
-      "source": "src\\screens\\Company\\App.jsx",
-      "target": "src\\screens\\Company\\App.jsx",
-      "data": {
-        "viaRoute": "/openbillrequest",
-        "trigger": {
-          "element": "<Link to=\"/openbillrequest\">Open Bill Request</Link>",
-          "line": 146,
-          "endLine": 146,
-          "column": 8,
-          "endColumn": 60,
-          "sourceFile": "src\\screens\\Company\\sections\\FilterSection\\FilterSection.jsx"
-        }
-      }
-    },
     {
       "id": "src\\Dashboard.jsx:15:6-to-src\\screens\\Company\\App.jsx",
       "source": "src\\Dashboard.jsx",

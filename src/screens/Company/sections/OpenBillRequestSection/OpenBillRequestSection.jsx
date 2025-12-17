@@ -33,52 +33,56 @@ const OpenBillRequestSection = ({ data = [] }) => {
                 position: "sticky",
                 top: 0,
                 zIndex: 10,
-                background: "#f0f4ff",
+                background: "#184a70ff",
                 boxShadow: "0 2px 4px rgba(0,0,0,0.15)",
               }}
             >
-              <TableCell sx={{ fontWeight: 600 }}>SNO</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Vessel IMO</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Vessel AE Code</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Vendor</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Vendor Company Name</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Bill Number</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Invoice Date</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Document Date</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Action</TableCell>
+              <TableCell sx={{ fontWeight: 600, color:"#ffffff" }}>SNO</TableCell>
+              <TableCell sx={{ fontWeight: 600, color:"#ffffff" }}>Vessel IMO</TableCell>
+              <TableCell sx={{ fontWeight: 600, color:"#ffffff" }}>Vessel AE Code</TableCell>
+              <TableCell sx={{ fontWeight: 600 , color:"#ffffff"}}>Vendor</TableCell>
+              <TableCell sx={{ fontWeight: 600 , color:"#ffffff"}}>Vendor Company Name</TableCell>
+              <TableCell sx={{ fontWeight: 600 , color:"#ffffff"}}>Bill Number</TableCell>
+              <TableCell sx={{ fontWeight: 600 , color:"#ffffff"}}>Invoice Date</TableCell>
+              <TableCell sx={{ fontWeight: 600 , color:"#ffffff"}}>Document Date</TableCell>
+              <TableCell sx={{ fontWeight: 600 , color:"#ffffff"}}>Action</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {data.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={9} align="center">
-                  No records found
-                </TableCell>
-              </TableRow>
-            )}
+  {data.length === 0 && (
+    <TableRow>
+      <TableCell colSpan={9} align="center">
+        No records found
+      </TableCell>
+    </TableRow>
+  )}
 
-            {data.map((row, index) => (
-              <TableRow
-                key={index}
-                sx={{ "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" } }}
-              >
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{row.vesselImo}</TableCell>
-                <TableCell>{row.vesselAeCode}</TableCell>
-                <TableCell>{row.vendor}</TableCell>
-                <TableCell>{row.vendorCompanyName}</TableCell>
-                <TableCell>{row.billNumber}</TableCell>
-                <TableCell>{formatDate(row.invoiceDate)}</TableCell>
-                <TableCell>{formatDate(row.documentDate)}</TableCell>
-                <TableCell>
-                  <IconButton color="primary" onClick={() => setSelectedRow(row)}>
-                    <VisibilityIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+  {data.map((row, index) => (
+    <TableRow
+      key={index}
+      sx={{
+        backgroundColor: index % 2 === 0 ? "#ffffff" : "#eae8e8ff", // alternate row colors
+        "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" }, // hover effect
+      }}
+    >
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{row.vesselImo}</TableCell>
+      <TableCell>{row.vesselAeCode}</TableCell>
+      <TableCell>{row.vendor}</TableCell>
+      <TableCell>{row.vendorCompanyName}</TableCell>
+      <TableCell>{row.billNumber}</TableCell>
+      <TableCell>{formatDate(row.invoiceDate)}</TableCell>
+      <TableCell>{formatDate(row.documentDate)}</TableCell>
+      <TableCell>
+        <IconButton  sx={{color:"#184a70ff"}}  onClick={() => setSelectedRow(row)}>
+          <VisibilityIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
         </Table>
       </TableContainer>
 

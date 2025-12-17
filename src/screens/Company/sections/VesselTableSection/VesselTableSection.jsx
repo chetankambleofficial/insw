@@ -62,47 +62,56 @@ export const VesselTableSection = ({ vessels = [] }) => {
                 position: "sticky",
                 top: 0,
                 zIndex: 10,
-                background: "#f0f4ff",
+                background: "#184a70ff",
+                
                 boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
               }}
             >
 
-              <TableCell sx={{ fontWeight: 600 }}>SNO</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Vessel Name</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>IMO Number</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Accounting Company</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Ship ID</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Created On</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Action</TableCell>
+              <TableCell sx={{ fontWeight: 600 ,color:"#ffffff"}}>SNO</TableCell>
+              <TableCell sx={{ fontWeight: 600 ,color:"#ffffff" }}>Vessel Name</TableCell>
+              <TableCell sx={{ fontWeight: 600 ,color:"#ffffff"}}>IMO Number</TableCell>
+              <TableCell sx={{ fontWeight: 600,color:"#ffffff" }}>Accounting Company</TableCell>
+              <TableCell sx={{ fontWeight: 600 ,color:"#ffffff"}}>Ship ID</TableCell>
+              <TableCell sx={{ fontWeight: 600 ,color:"#ffffff"}}>Status</TableCell>
+              <TableCell sx={{ fontWeight: 600 ,color:"#ffffff"}}>Created On</TableCell>
+              <TableCell sx={{ fontWeight: 600 ,color:"#ffffff"}}>Action</TableCell>
             </TableRow>
           </TableHead>
 
-          <TableBody>
-            {vessels.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={8} align="center">
-                  No vessels found
-                </TableCell>
-              </TableRow>
-            )}
-            {vessels.map((vessel, index) => (
-              <TableRow key={vessel.VESSEL_IMO} sx={{ "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" } }}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{vessel.VESSEL_NAME}</TableCell>
-                <TableCell>{vessel.VESSEL_IMO}</TableCell>
-                <TableCell>{vessel.ACCOUNTING_COMPANY_NAME}</TableCell>
-                <TableCell>{vessel.SHIP_ID}</TableCell>
-                <TableCell>{renderStatus(vessel.STATUS)}</TableCell>
-                <TableCell>{new Date(vessel.CREATED_ON).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <IconButton color="primary" onClick={() => setSelectedVessel(vessel)}>
-                    <VisibilityIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+       <TableBody>
+  {vessels.length === 0 && (
+    <TableRow>
+      <TableCell colSpan={8} align="center">
+        No vessels found
+      </TableCell>
+    </TableRow>
+  )}
+
+  {vessels.map((vessel, index) => (
+    <TableRow
+      key={vessel.VESSEL_IMO}
+      sx={{
+        backgroundColor: index % 2 === 0 ? "#ffffff" : "#eeeeeeff", // alternate row colors
+        "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" }, // hover effect
+      }}
+    >
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{vessel.VESSEL_NAME}</TableCell>
+      <TableCell>{vessel.VESSEL_IMO}</TableCell>
+      <TableCell>{vessel.ACCOUNTING_COMPANY_NAME}</TableCell>
+      <TableCell>{vessel.SHIP_ID}</TableCell>
+      <TableCell>{renderStatus(vessel.STATUS)}</TableCell>
+      <TableCell>{new Date(vessel.CREATED_ON).toLocaleDateString()}</TableCell>
+      <TableCell>
+        <IconButton sx={{color:"#184a70ff"}}  onClick={() => setSelectedVessel(vessel)}>
+          <VisibilityIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
         </Table>
       </TableContainer>
 

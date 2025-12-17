@@ -46,54 +46,58 @@ const GeneralLedgerTable = ({ data = [] }) => {
                 position: "sticky",
                 top: 0,
                 zIndex: 10,
-                background: "#f0f4ff",
+                background: "#184a70ff",
                 boxShadow: "0 2px 4px rgba(0,0,0,0.15)",
               }}
             >
-              <TableCell sx={{ fontWeight: 600 }}>SNO</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Vessel IMO</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Vessel AE Code</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Accounting Period</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Document No</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Accounting No</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Transaction Date</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Base Currency</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Base Amount</TableCell>
-              <TableCell sx={{ fontWeight: 600 }}>Action</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>SNO</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Vessel IMO</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Vessel AE Code</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Accounting Period</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Document No</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Accounting No</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Transaction Date</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Base Currency</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Base Amount</TableCell>
+              <TableCell sx={{ fontWeight: 600, color: "#ffffff" }}>Action</TableCell>
             </TableRow>
           </TableHead>
 
-          <TableBody>
-            {data.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={10} align="center">
-                  No records found
-                </TableCell>
-              </TableRow>
-            )}
+         <TableBody>
+  {data.length === 0 && (
+    <TableRow>
+      <TableCell colSpan={10} align="center">
+        No records found
+      </TableCell>
+    </TableRow>
+  )}
 
-            {data.map((row, index) => (
-              <TableRow
-                key={index}
-                sx={{ "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" } }}
-              >
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{row.vesselImo}</TableCell>
-                <TableCell>{row.vesselAeCode}</TableCell>
-                <TableCell>{row.accountingPeriod}</TableCell>
-                <TableCell>{row.documentNumber}</TableCell>
-                <TableCell>{row.accountingNumber}</TableCell>
-                <TableCell>{formatDate(row.transactionDate)}</TableCell>
-                <TableCell>{row.baseCurrency || "-"}</TableCell>
-                <TableCell>{formatCurrency(row.baseAmount)}</TableCell>
-                <TableCell>
-                  <IconButton color="primary" onClick={() => setSelectedRow(row)}>
-                    <VisibilityIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+  {data.map((row, index) => (
+    <TableRow
+      key={index}
+      sx={{
+        backgroundColor: index % 2 === 0 ? "#ffffff" : "#edebebff", // alternate row colors
+        "&:hover": { backgroundColor: "rgba(0,0,0,0.04)" }, // hover effect
+      }}
+    >
+      <TableCell>{index + 1}</TableCell>
+      <TableCell>{row.vesselImo}</TableCell>
+      <TableCell>{row.vesselAeCode}</TableCell>
+      <TableCell>{row.accountingPeriod}</TableCell>
+      <TableCell>{row.documentNumber}</TableCell>
+      <TableCell>{row.accountingNumber}</TableCell>
+      <TableCell>{formatDate(row.transactionDate)}</TableCell>
+      <TableCell>{row.baseCurrency || "-"}</TableCell>
+      <TableCell>{formatCurrency(row.baseAmount)}</TableCell>
+      <TableCell>
+        <IconButton  sx={{color:"#184a70ff"}}  onClick={() => setSelectedRow(row)}>
+          <VisibilityIcon />
+        </IconButton>
+      </TableCell>
+    </TableRow>
+  ))}
+</TableBody>
+
         </Table>
       </TableContainer>
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, Stack } from "@mui/material";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -14,11 +15,10 @@ import OpenBillRequestSection from "./sections/OpenBillRequestSection/OpenBillRe
 
 import { exportToExcel } from "../../utils/exportToExcel";
 
-export const App = ({ page }) => {
+export const App = () => {
   const location = useLocation();
-
-  let activePage =
-    page || location.pathname.replace("/", "") || "vessels";
+const navigate = useNavigate();
+  let activePage = location.pathname.replace("/", "") || "vessels";
   if (activePage === "vessel") activePage = "vessels";
 
   const [vessels, setVessels] = useState([]);
@@ -34,113 +34,105 @@ export const App = ({ page }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [recordCount, setRecordCount] = useState(0);
 
-  // Fetch vessels
+  /* ================= FETCH DATA ================= */
   useEffect(() => {
+    axios.get("http://localhost:8055/api/vessels").then((r) => setVessels(r.data));
     axios
-      .get("http://localhost:5000/api/vessels")
-      .then((res) => setVessels(res.data))
-      .catch(console.error);
+      .get("http://localhost:8055/api/general-ledger")
+      .then((r) => setGeneralLedger(r.data));
+    axios
+      .get("http://localhost:8055/api/openbillrequest")
+      .then((r) => setOpenBillRequest(r.data));
   }, []);
 
-  // Fetch General Ledger
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/general-ledger")
-      .then((res) => setGeneralLedger(res.data))
-      .catch(console.error);
-  }, []);
-
-  // Fetch Open Bill Requests
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/openbillrequest")
-      .then((res) => setOpenBillRequest(res.data))
-      .catch(console.error);
-  }, []);
-
-  // Build company list dynamically per page
+  /* ================= BUILD FILTER LIST ================= */
   useEffect(() => {
     let list = [];
+
     if (activePage === "vessels") {
       list = vessels.map((v) => v.ACCOUNTING_COMPANY_NAME);
     }
+
     if (activePage === "general-ledger") {
-      list = generalLedger.map((g) => g.documentNumber); // ONLY company names
+      list = generalLedger.map((g) => g.documentNumber);
     }
+
     if (activePage === "openbillrequest") {
       list = openBillRequest.map((b) => b.vendorCompanyName);
     }
-    setCompanies(["All", ...new Set(list)]);
+
+    setCompanies(["All", ...new Set(list.filter(Boolean))]);
+    setSelectedCompany("All");
   }, [activePage, vessels, generalLedger, openBillRequest]);
 
-  // Filter vessels
+  /* ================= FILTERED DATA ================= */
+
   const filteredVessels = vessels.filter(
     (v) =>
       (selectedCompany === "All" ||
         v.ACCOUNTING_COMPANY_NAME === selectedCompany) &&
       (searchQuery === "" ||
-        v.VESSEL_NAME.toLowerCase().includes(searchQuery.toLowerCase()))
+        v.VESSEL_NAME?.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  // Filter General Ledger
-  const filteredGL = generalLedger.filter(
-    (g) =>
-      (selectedCompany === "All" ||
-        g.documentNumber === selectedCompany) &&
-      (searchQuery === "" ||
-        g.vesselImo.toString().includes(searchQuery)) &&
-      (!startDate ||
-        !endDate ||
-        (new Date(g.transactionDate) >= new Date(startDate) &&
-          new Date(g.transactionDate) <= new Date(endDate)))
-  );
+  const filteredGL = generalLedger.filter((g) => {
+    const matchesDocument =
+      selectedCompany === "All" || g.documentNumber === selectedCompany;
 
-  // Filter Open Bill Requests
+    const matchesDate =
+      !startDate ||
+      !endDate ||
+      (new Date(g.transactionDate) >= new Date(startDate) &&
+        new Date(g.transactionDate) <= new Date(endDate));
+
+    const matchesSearch =
+      searchQuery === "" ||
+      g.documentNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      g.accountingNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      g.memo?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesDocument && matchesDate && matchesSearch;
+  });
+
   const filteredOBR = openBillRequest.filter((b) => {
-    const matchCompany =
-      selectedCompany === "All" || b.vendorCompanyName === selectedCompany;
+    const matchesCompany =
+      selectedCompany === "All" ||
+      b.vendorCompanyName === selectedCompany;
 
-    const matchSearch =
-      searchQuery === "" || b.vesselImo?.toString().includes(searchQuery);
-
-    const matchPeriod =
+    const matchesDate =
       !startDate ||
       !endDate ||
       (new Date(b.invoiceDate) >= new Date(startDate) &&
         new Date(b.invoiceDate) <= new Date(endDate));
 
-    return matchCompany && matchSearch && matchPeriod;
+    const matchesSearch =
+      searchQuery === "" ||
+      b.vendorCompanyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      b.invoiceNumber?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesCompany && matchesDate && matchesSearch;
   });
 
-  // Update record count
+  /* ================= RECORD COUNT ================= */
   useEffect(() => {
     if (activePage === "vessels") setRecordCount(filteredVessels.length);
     if (activePage === "general-ledger") setRecordCount(filteredGL.length);
     if (activePage === "openbillrequest") setRecordCount(filteredOBR.length);
   }, [filteredVessels, filteredGL, filteredOBR, activePage]);
 
-  // Export to Excel
-  const handleExport = () => {
-    if (activePage === "general-ledger")
-      exportToExcel(filteredGL, "GeneralLedger.xlsx");
+  /* ================= EXPORT ================= */
+const handleUpload = (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
 
-    if (activePage === "openbillrequest")
-      exportToExcel(filteredOBR, "OpenBillRequests.xlsx");
-  };
+  // axios.post("/api/upload-excel", formData)
+  console.log("Uploading:", file.name);
+};
+
 
   return (
-    <Box sx={{ bgcolor: "#f2f4f7", width: "100%", minHeight: "100vh" }}>
-      <Box
-        sx={{
-          position: "sticky",
-          top: 0,
-          zIndex: 20,
-          bgcolor: "white",
-          borderBottom: "1px solid #e0e0e0",
-        }}
-      >
-        <HeaderSection vesselCount={recordCount} />
-      </Box>
+    <Box sx={{ bgcolor: "#f2f4f7", minHeight: "100vh" }}>
+      <HeaderSection />
 
       <Stack direction="row">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -148,7 +140,6 @@ export const App = ({ page }) => {
             companies={companies}
             selectedCompany={selectedCompany}
             setSelectedCompany={setSelectedCompany}
-            activePage={activePage}
             startDate={startDate}
             setStartDate={setStartDate}
             endDate={endDate}
@@ -161,7 +152,7 @@ export const App = ({ page }) => {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             recordCount={recordCount}
-            onExportExcel={handleExport}
+            onUploadExcel={handleUpload}
           />
 
           {activePage === "vessels" && (

@@ -78,7 +78,6 @@ const Dashboard = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 mt: 3,
-                
               }}
             >
               <Typography
@@ -89,10 +88,12 @@ const Dashboard = () => {
                   mb: 5,
                   fontFamily: "Fjalla One",
                   textAlign: "center",
-                    fontSize:70,
+                  fontSize: 70,
                   position: "relative",
-                  lineheigh:10,
-                  animation: "fadeSlideScale 1s cubic-bezier(0.25, 1, 0.5, 1) forwards",
+                  lineHeight: 1.2,
+                  opacity: 0,
+                  transform: "translateY(40px) scale(0.95)",
+                  animation: "textAppear 1s ease forwards",
                   animationDelay: "0.2s",
                   "&::after": {
                     content: '""',
@@ -103,24 +104,23 @@ const Dashboard = () => {
                     height: "9px",
                     backgroundColor: "rgba(255, 255, 255, 0.44)",
                     borderRadius: "2px",
-                    animation: "growUnderline 1s forwards",
+                    animation: "underlineGrow 1s ease forwards",
+                    animationDelay: "0.8s",
                     maxWidth: "60%",
-                    animationDelay: "0.6s",
-                  
                   },
                 }}
               >
-                WELCOME TO THE <br /> 
-  <span
-    style={{
-      color: "#000000ff",
-      WebkitTextStroke: "0.1px #fffbfbff", // white outline
-      padding: "10px",
-    }}
-  >
-    INTERNATIONAL SEAWAYS
-  </span>
-  <br />  PORTAL
+                WELCOME TO THE <br />
+                <span
+                  style={{
+                    color: "#000000ff",
+                    WebkitTextStroke: "0.1px #fffbfbff",
+                    padding: "10px",
+                  }}
+                >
+                  INTERNATIONAL SEAWAYS
+                </span>
+                <br /> PORTAL
               </Typography>
 
               <Typography
@@ -132,7 +132,9 @@ const Dashboard = () => {
                   fontWeight: 400,
                   textAlign: "center",
                   fontFamily: "Space Grotesk",
-                  animation: "fadeSlideScale 1s cubic-bezier(0.25, 1, 0.5, 1) forwards",
+                  opacity: 0,
+                  transform: "translateY(20px)",
+                  animation: "textAppear 1s ease forwards",
                   animationDelay: "0.4s",
                 }}
               >
@@ -160,13 +162,15 @@ const Dashboard = () => {
                 className="card-animate"
                 sx={{
                   width: "70%",
-                  borderRadius: 3,
+                  borderRadius: 5,
                   overflow: "hidden",
                   position: "relative",
                   cursor: "pointer",
                   border: "0.5px solid #5d5d5dff",
                   boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
-                  animation: "fadeSlideScale 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards",
+                  transform: "translateY(30px)",
+                  opacity: 0,
+                  animation: "cardAppear 1s ease forwards",
                   animationDelay: "0.5s",
                 }}
               >
@@ -176,59 +180,11 @@ const Dashboard = () => {
                   image="./public/images/ae.png"
                   sx={{ transition: "0.4s ease" }}
                 />
-                <Box
-                  className="hover-overlay"
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "rgba(0,0,0,0.6)",
-                    opacity: 0,
-                    transition: "0.4s ease",
-                  }}
-                />
-                <Typography
-                  className="card-title"
-                  sx={{
-                    position: "absolute",
-                    top: 10,
-                    left: 15,
-                    zIndex: 2,
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "1.3rem",
-                    fontFamily: "Fjalla One",
-                    transition: "0.45s ease",
-                  }}
-                >
-                  Anglo Eastern
-                </Typography>
-                <Box
-                  sx={{
-                    position: "absolute",
-                    bottom: 0,
-                    width: "100%",
-                    p: 2,
-                    backgroundColor: "rgba(26, 32, 35, 0.69)",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      color: "white",
-                      fontSize: "0.85rem",
-                      lineHeight: 1.4,
-                      overflow: "hidden",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: "vertical",
-                      fontFamily: "Space Grotesk",
-                    }}
-                  >
-                    Anglo Eastern manages one of the world's largest fleets,
-                    ensuring safe and efficient maritime operations globally.
-                  </Typography>
+                <Box className="hover-overlay" />
+                <Typography className="card-title">Anglo Eastern</Typography>
+                <Box className="card-description">
+                  Anglo Eastern manages one of the world's largest fleets,
+                  ensuring safe and efficient maritime operations globally.
                 </Box>
               </Card>
 
@@ -244,7 +200,9 @@ const Dashboard = () => {
                   cursor: "pointer",
                   border: "0.5px solid #5d5d5dff",
                   boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
-                  animation: "fadeSlideScale 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards",
+                  transform: "translateY(30px)",
+                  opacity: 0,
+                  animation: "cardAppear 1s ease forwards",
                   animationDelay: "0.7s",
                 }}
               >
@@ -254,59 +212,11 @@ const Dashboard = () => {
                   image="./public/images/vships.png"
                   sx={{ transition: "0.4s ease" }}
                 />
-                <Box
-                  className="hover-overlay"
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "rgba(0,0,0,0.6)",
-                    opacity: 0,
-                    transition: "0.4s ease",
-                  }}
-                />
-                <Typography
-                  className="card-title"
-                  sx={{
-                    position: "absolute",
-                    top: 10,
-                    left: 15,
-                    zIndex: 2,
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "1.3rem",
-                    fontFamily: "Fjalla One",
-                    transition: "0.45s ease",
-                  }}
-                >
-                  VShips
-                </Typography>
-                <Box
-                  sx={{
-                    position: "absolute",
-                    bottom: 0,
-                    width: "100%",
-                    p: 2,
-                    backgroundColor: "rgba(26, 32, 35, 0.69)",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      color: "white",
-                      fontSize: "0.85rem",
-                      lineHeight: 1.4,
-                      overflow: "hidden",
-                      display: "-webkit-box",
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: "vertical",
-                      fontFamily: "Space Grotesk",
-                    }}
-                  >
-                    VShips provides world-class marine services, ensuring fleet
-                    compliance, efficiency, and technical excellence.
-                  </Typography>
+                <Box className="hover-overlay" />
+                <Typography className="card-title">VShips</Typography>
+                <Box className="card-description">
+                  VShips provides world-class marine services, ensuring fleet
+                  compliance, efficiency, and technical excellence.
                 </Box>
               </Card>
             </Box>
@@ -316,36 +226,40 @@ const Dashboard = () => {
 
       <style>
         {`
-          /* Strong Slide-Up + Fade + Scale */
-          @keyframes fadeSlideScale {
-            0% { opacity: 0; transform: translateY(40px) scale(0.85); }
+          /* Smooth text appear */
+          @keyframes textAppear {
+            0% { opacity: 0; transform: translateY(40px) scale(0.95); }
             60% { opacity: 1; transform: translateY(-10px) scale(1.02); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
           }
 
-          /* Underline Animation */
-          @keyframes growUnderline {
+          @keyframes underlineGrow {
             0% { width: 0; }
             100% { width: 100%; }
           }
 
-          /* Hover: Title Center + Bigger */
+          /* Cards appear smoothly */
+          @keyframes cardAppear {
+            0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+            60% { opacity: 1; transform: translateY(-5px) scale(1.02); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+          }
+
+          /* Hover effects */
           .card-animate:hover .card-title {
             top: 50% !important;
             left: 50% !important;
-            transform: translate(-50%, -50%) scale(1.2);
-            font-size: 2.2rem !important;
+            transform: translate(-50%, -50%) scale(1.15);
+            font-size: 2rem !important;
             letter-spacing: 1px;
           }
 
-          /* Overlay Fade */
           .card-animate:hover .hover-overlay {
             opacity: 1;
           }
 
-          /* Image Zoom */
           .card-animate:hover img {
-            transform: scale(1.08);
+            transform: scale(1.07);
           }
 
           /* Loader Dots */
@@ -358,10 +272,46 @@ const Dashboard = () => {
           }
           .ship-dot:nth-of-type(2) { animation-delay: 0.2s; }
           .ship-dot:nth-of-type(3) { animation-delay: 0.4s; }
-
           @keyframes bounce {
             0% { transform: translateY(0); opacity: 0.6; }
             100% { transform: translateY(-20px); opacity: 1; }
+          }
+
+          .hover-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            opacity: 0;
+            transition: 0.4s ease;
+          }
+
+          .card-title {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            z-index: 2;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            font-family: Fjalla One;
+            transition: 0.45s ease;
+          }
+
+          .card-description {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 16px;
+            background-color: rgba(26, 32, 35, 0.69);
+            color: white;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            font-family: Space Grotesk;
           }
         `}
       </style>
