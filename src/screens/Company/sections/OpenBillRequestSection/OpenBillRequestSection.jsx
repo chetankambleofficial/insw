@@ -24,7 +24,7 @@ const OpenBillRequestSection = ({ data = [] }) => {
     <Box sx={{ width: "100%", mt: 0 }}>
       <TableContainer
         component={Paper}
-        sx={{ borderRadius: 2, maxHeight: "77vh", overflowY: "auto" }}
+        sx={{ borderRadius: 0, maxHeight: "77vh", overflowY: "auto" }}
       >
         <Table>
           <TableHead>

@@ -34,7 +34,7 @@ const GeneralLedgerTable = ({ data = [] }) => {
       <TableContainer
         component={Paper}
         sx={{
-          borderRadius: 2,
+          borderRadius: 0,
           maxHeight: "77vh",
           overflowY: "auto",
         }}

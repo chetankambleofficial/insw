@@ -7,23 +7,25 @@ import {
   LinearProgress,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-export const HeaderSection = () => {
+export const HeaderSection = ({ section = "ae" }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-  const handlelogout = () => {
+
+  const handleLogout = () => {
     navigate("/login");
   };
+
+  // Build dynamic nav links based on section
   const navLinks = [
     { label: "Home", path: "/" },
-    { label: "Vessels", path: "/vessel" },
-    { label: "General Ledger", path: "/general-ledger" },
-    { label: "Open Bill Request", path: "/openbillrequest" },
+    { label: "Vessels", path: `/${section}/vessel` },
+    { label: "General Ledger", path: `/${section}/general-ledger` },
+    { label: "Open Bill Request", path: `/${section}/openbillrequest` },
   ];
 
   const hideNavLinks = location.pathname === "/";
@@ -36,7 +38,7 @@ export const HeaderSection = () => {
     setTimeout(() => {
       navigate(path);
       setLoading(false);
-    }, 1000); // ⏱️ 2 seconds
+    }, 1000); // 1 second loader
   };
 
   return (
@@ -97,7 +99,6 @@ export const HeaderSection = () => {
                     fontWeight: 600,
                     fontSize: "15px",
                     transition: "all 0.3s ease",
-
                     "&::after": {
                       content: '""',
                       position: "absolute",
@@ -108,11 +109,9 @@ export const HeaderSection = () => {
                       bgcolor: "#4f7cff",
                       transition: "width 0.35s ease",
                     },
-
                     "&:hover": {
                       color: "#ffffff",
                     },
-
                     "&:hover::after": {
                       width: "100%",
                     },
@@ -145,7 +144,7 @@ export const HeaderSection = () => {
           <Button
             variant="outlined"
             startIcon={<LogoutIcon />}
-            onClick={handlelogout}
+            onClick={handleLogout}
             sx={{
               color: "#f2f4f7",
               borderColor: "#f2f4f7",

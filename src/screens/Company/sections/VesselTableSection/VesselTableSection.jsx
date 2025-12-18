@@ -49,7 +49,7 @@ export const VesselTableSection = ({ vessels = [] }) => {
       <TableContainer
         component={Paper}
         sx={{
-          borderRadius: 2,
+          borderRadius: 0,
           maxHeight: "77vh",     // scroll starts inside this
           overflowY: "auto",
         }}

@@ -1,15 +1,6 @@
 {
   "nodes": [
     {
-      "id": "src/screens/Company/App.jsx",
-      "label": "App",
-      "routes": [
-        "/vessel",
-        "/general-ledger",
-        "/openbillrequest"
-      ]
-    },
-    {
       "id": "src/Dashboard.jsx",
       "label": "Dashboard",
       "routes": [
@@ -18,29 +9,17 @@
       "isRoot": true
     },
     {
-      "id": "src/screens/Company/sections/uploadExcel/uploadExcel.jsx",
-      "label": "uploadExcel",
+      "id": "src/screens/Company/App.jsx",
+      "label": "App",
       "routes": [
-        "/uploadExcel"
+        "/ae/vessel",
+        "/ae/general-ledger",
+        "/ae/openbillrequest",
+        "/vships/vessel",
+        "/vships/general-ledger",
+        "/vships/openbillrequest"
       ]
     }
   ],
-  "edges": [
-    {
-      "id": "src\\Dashboard.jsx:15:6-to-src\\screens\\Company\\App.jsx",
-      "source": "src\\Dashboard.jsx",
-      "target": "src\\screens\\Company\\App.jsx",
-      "data": {
-        "viaRoute": "/vessel",
-        "trigger": {
-          "element": "navigate(\"/vessel\")",
-          "line": 15,
-          "endLine": 15,
-          "column": 6,
-          "endColumn": 25,
-          "sourceFile": "src\\Dashboard.jsx"
-        }
-      }
-    }
-  ]
+  "edges": []
 }

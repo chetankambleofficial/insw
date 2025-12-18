@@ -5,20 +5,36 @@ import { useNavigate } from "react-router-dom";
 
 import "./Dashboard.css";
 
+const cardData = [
+  {
+    title: "Anglo Eastern",
+    description:
+      "Anglo Eastern manages one of the world's largest fleets, ensuring safe and efficient maritime operations globally.",
+    image: "public/images/ae.png",
+    section: "ae",
+  },
+  {
+    title: "VShips",
+    description:
+      "VShips provides world-class marine services, ensuring fleet compliance, efficiency, and technical excellence.",
+    image: "public/images/vships.png",
+    section: "vships",
+  },
+];
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleCardClick = () => {
+  const handleCardClick = (section, page = "vessel") => {
     setLoading(true);
     setTimeout(() => {
-      navigate("/vessel");
-    }, 1500); // simulate 1.5s loading
+      navigate(`/${section}/${page}`);
+    }, 1500);
   };
 
   return (
     <>
-      {/* Loader on Card Click */}
       {loading && (
         <Box
           sx={{
@@ -156,69 +172,36 @@ const Dashboard = () => {
                 fontFamily: "Space Grotesk",
               }}
             >
-              {/* CARD 1 */}
-              <Card
-                onClick={handleCardClick}
-                className="card-animate"
-                sx={{
-                  width: "70%",
-                  borderRadius: 5,
-                  overflow: "hidden",
-                  position: "relative",
-                  cursor: "pointer",
-                  border: "0.5px solid #5d5d5dff",
-                  boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
-                  transform: "translateY(30px)",
-                  opacity: 0,
-                  animation: "cardAppear 1s ease forwards",
-                  animationDelay: "0.5s",
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="225"
-                  image="./public/images/ae.png"
-                  sx={{ transition: "0.4s ease" }}
-                />
-                <Box className="hover-overlay" />
-                <Typography className="card-title">Anglo Eastern</Typography>
-                <Box className="card-description">
-                  Anglo Eastern manages one of the world's largest fleets,
-                  ensuring safe and efficient maritime operations globally.
-                </Box>
-              </Card>
-
-              {/* CARD 2 */}
-              <Card
-                onClick={handleCardClick}
-                className="card-animate"
-                sx={{
-                  width: "70%",
-                  borderRadius: 5,
-                  overflow: "hidden",
-                  position: "relative",
-                  cursor: "pointer",
-                  border: "0.5px solid #5d5d5dff",
-                  boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
-                  transform: "translateY(30px)",
-                  opacity: 0,
-                  animation: "cardAppear 1s ease forwards",
-                  animationDelay: "0.7s",
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="225"
-                  image="./public/images/vships.png"
-                  sx={{ transition: "0.4s ease" }}
-                />
-                <Box className="hover-overlay" />
-                <Typography className="card-title">VShips</Typography>
-                <Box className="card-description">
-                  VShips provides world-class marine services, ensuring fleet
-                  compliance, efficiency, and technical excellence.
-                </Box>
-              </Card>
+              {cardData.map((card, idx) => (
+                <Card
+                  key={idx}
+                  onClick={() => handleCardClick(card.section)}
+                  className="card-animate"
+                  sx={{
+                    width: "70%",
+                    borderRadius: 5,
+                    overflow: "hidden",
+                    position: "relative",
+                    cursor: "pointer",
+                    border: "0.5px solid #5d5d5dff",
+                    boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
+                    transform: "translateY(30px)",
+                    opacity: 0,
+                    animation: `cardAppear 1s ease forwards`,
+                    animationDelay: `${0.5 + idx * 0.2}s`,
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="225"
+                    image={card.image}
+                    sx={{ transition: "0.4s ease" }}
+                  />
+                  <Box className="hover-overlay" />
+                  <Typography className="card-title">{card.title}</Typography>
+                  <Box className="card-description">{card.description}</Box>
+                </Card>
+              ))}
             </Box>
           </Box>
         </div>
@@ -226,7 +209,6 @@ const Dashboard = () => {
 
       <style>
         {`
-          /* Smooth text appear */
           @keyframes textAppear {
             0% { opacity: 0; transform: translateY(40px) scale(0.95); }
             60% { opacity: 1; transform: translateY(-10px) scale(1.02); }
@@ -238,14 +220,12 @@ const Dashboard = () => {
             100% { width: 100%; }
           }
 
-          /* Cards appear smoothly */
           @keyframes cardAppear {
             0% { opacity: 0; transform: translateY(40px) scale(0.95); }
             60% { opacity: 1; transform: translateY(-5px) scale(1.02); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
           }
 
-          /* Hover effects */
           .card-animate:hover .card-title {
             top: 50% !important;
             left: 50% !important;
@@ -262,7 +242,6 @@ const Dashboard = () => {
             transform: scale(1.07);
           }
 
-          /* Loader Dots */
           .ship-dot {
             width: 18px;
             height: 18px;
@@ -272,6 +251,7 @@ const Dashboard = () => {
           }
           .ship-dot:nth-of-type(2) { animation-delay: 0.2s; }
           .ship-dot:nth-of-type(3) { animation-delay: 0.4s; }
+
           @keyframes bounce {
             0% { transform: translateY(0); opacity: 0.6; }
             100% { transform: translateY(-20px); opacity: 1; }

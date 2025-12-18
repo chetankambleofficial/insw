@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Stack } from "@mui/material";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -13,13 +13,13 @@ import { VesselTableSection } from "./sections/VesselTableSection/VesselTableSec
 import GeneralLedgerTable from "./sections/GeneralLedger/GeneralLedgerTable";
 import OpenBillRequestSection from "./sections/OpenBillRequestSection/OpenBillRequestSection";
 
-import { exportToExcel } from "../../utils/exportToExcel";
-
-export const App = () => {
+export const App = ({ section = "ae", page = "vessel" }) => {
   const location = useLocation();
-const navigate = useNavigate();
-  let activePage = location.pathname.replace("/", "") || "vessels";
-  if (activePage === "vessel") activePage = "vessels";
+
+  let activePage = page;
+  if (location.pathname.includes("vessel")) activePage = "vessels";
+  if (location.pathname.includes("general-ledger")) activePage = "general-ledger";
+  if (location.pathname.includes("openbillrequest")) activePage = "openbillrequest";
 
   const [vessels, setVessels] = useState([]);
   const [generalLedger, setGeneralLedger] = useState([]);
@@ -34,57 +34,59 @@ const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [recordCount, setRecordCount] = useState(0);
 
+  const [loadingData, setLoadingData] = useState(false);
+
+  const baseURL = "http://localhost:8055/api";
+
   /* ================= FETCH DATA ================= */
+  const fetchData = async () => {
+    setLoadingData(true);
+    try {
+      const [vesselsRes, glRes, obrRes] = await Promise.all([
+        axios.get(`${baseURL}/vessels?section=${section}`),
+        axios.get(`${baseURL}/general-ledger?section=${section}`),
+        axios.get(`${baseURL}/openbillrequest?section=${section}`),
+      ]);
+
+      setVessels(vesselsRes.data);
+      setGeneralLedger(glRes.data);
+      setOpenBillRequest(obrRes.data);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
   useEffect(() => {
-    axios.get("http://localhost:8055/api/vessels").then((r) => setVessels(r.data));
-    axios
-      .get("http://localhost:8055/api/general-ledger")
-      .then((r) => setGeneralLedger(r.data));
-    axios
-      .get("http://localhost:8055/api/openbillrequest")
-      .then((r) => setOpenBillRequest(r.data));
-  }, []);
+    fetchData();
+  }, [section]);
 
   /* ================= BUILD FILTER LIST ================= */
   useEffect(() => {
     let list = [];
-
-    if (activePage === "vessels") {
-      list = vessels.map((v) => v.ACCOUNTING_COMPANY_NAME);
-    }
-
-    if (activePage === "general-ledger") {
-      list = generalLedger.map((g) => g.documentNumber);
-    }
-
-    if (activePage === "openbillrequest") {
-      list = openBillRequest.map((b) => b.vendorCompanyName);
-    }
+    if (activePage === "vessels") list = vessels.map((v) => v.ACCOUNTING_COMPANY_NAME);
+    if (activePage === "general-ledger") list = generalLedger.map((g) => g.documentNumber);
+    if (activePage === "openbillrequest") list = openBillRequest.map((b) => b.vendorCompanyName);
 
     setCompanies(["All", ...new Set(list.filter(Boolean))]);
     setSelectedCompany("All");
   }, [activePage, vessels, generalLedger, openBillRequest]);
 
   /* ================= FILTERED DATA ================= */
-
   const filteredVessels = vessels.filter(
     (v) =>
-      (selectedCompany === "All" ||
-        v.ACCOUNTING_COMPANY_NAME === selectedCompany) &&
-      (searchQuery === "" ||
-        v.VESSEL_NAME?.toLowerCase().includes(searchQuery.toLowerCase()))
+      (selectedCompany === "All" || v.ACCOUNTING_COMPANY_NAME === selectedCompany) &&
+      (searchQuery === "" || v.VESSEL_NAME?.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const filteredGL = generalLedger.filter((g) => {
-    const matchesDocument =
-      selectedCompany === "All" || g.documentNumber === selectedCompany;
-
+    const matchesDocument = selectedCompany === "All" || g.documentNumber === selectedCompany;
     const matchesDate =
       !startDate ||
       !endDate ||
       (new Date(g.transactionDate) >= new Date(startDate) &&
         new Date(g.transactionDate) <= new Date(endDate));
-
     const matchesSearch =
       searchQuery === "" ||
       g.documentNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -95,16 +97,12 @@ const navigate = useNavigate();
   });
 
   const filteredOBR = openBillRequest.filter((b) => {
-    const matchesCompany =
-      selectedCompany === "All" ||
-      b.vendorCompanyName === selectedCompany;
-
+    const matchesCompany = selectedCompany === "All" || b.vendorCompanyName === selectedCompany;
     const matchesDate =
       !startDate ||
       !endDate ||
       (new Date(b.invoiceDate) >= new Date(startDate) &&
         new Date(b.invoiceDate) <= new Date(endDate));
-
     const matchesSearch =
       searchQuery === "" ||
       b.vendorCompanyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -120,19 +118,16 @@ const navigate = useNavigate();
     if (activePage === "openbillrequest") setRecordCount(filteredOBR.length);
   }, [filteredVessels, filteredGL, filteredOBR, activePage]);
 
-  /* ================= EXPORT ================= */
-const handleUpload = (file) => {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  // axios.post("/api/upload-excel", formData)
-  console.log("Uploading:", file.name);
-};
-
+  /* ================= UPLOAD HANDLER ================= */
+  const handleUpload = async (file) => {
+    console.log(`Uploading for ${section}:`, file.name);
+    // implement actual upload logic here, e.g., axios POST
+    await fetchData(); // optionally refresh after upload
+  };
 
   return (
     <Box sx={{ bgcolor: "#f2f4f7", minHeight: "100vh" }}>
-      <HeaderSection />
+      <HeaderSection section={section} />
 
       <Stack direction="row">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -144,7 +139,16 @@ const handleUpload = (file) => {
             setStartDate={setStartDate}
             endDate={endDate}
             setEndDate={setEndDate}
+            recordCount={recordCount}
+            filteredData={
+              activePage === "vessels"
+                ? filteredVessels
+                : activePage === "general-ledger"
+                  ? filteredGL
+                  : filteredOBR
+            }
           />
+
         </LocalizationProvider>
 
         <Stack sx={{ width: "100%" }}>
@@ -153,18 +157,17 @@ const handleUpload = (file) => {
             setSearchQuery={setSearchQuery}
             recordCount={recordCount}
             onUploadExcel={handleUpload}
+            onRefresh={fetchData} // refresh API
           />
 
           {activePage === "vessels" && (
-            <VesselTableSection vessels={filteredVessels} />
+            <VesselTableSection vessels={filteredVessels} loading={loadingData} />
           )}
-
           {activePage === "general-ledger" && (
-            <GeneralLedgerTable data={filteredGL} />
+            <GeneralLedgerTable data={filteredGL} loading={loadingData} />
           )}
-
           {activePage === "openbillrequest" && (
-            <OpenBillRequestSection data={filteredOBR} />
+            <OpenBillRequestSection data={filteredOBR} loading={loadingData} />
           )}
         </Stack>
       </Stack>

@@ -1,5 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import {
   Box,
   Chip,
@@ -20,21 +21,34 @@ export const MainContentSection = ({
   setSearchQuery,
   recordCount,
   onUploadExcel,
+  onRefresh, // function to refetch API
 }) => {
   const location = useLocation();
   const fileInputRef = useRef(null);
 
   const [uploading, setUploading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [toast, setToast] = useState({
     open: false,
     message: "",
     severity: "success",
   });
 
+  const pathname = location.pathname;
+
   /* ===== PAGE DETECTION ===== */
-  const isVesselsPage = location.pathname.startsWith("/vessel");
-  const isLedgerPage = location.pathname === "/general-ledger";
-  const isOpenBillPage = location.pathname === "/openbillrequest";
+  const isVesselsPage =
+    pathname === "/ae/vessel" || pathname === "/vships/vessel";
+
+  const isLedgerPage =
+    pathname === "/ae/general-ledger" || pathname === "/vships/general-ledger";
+
+  const isOpenBillPage =
+    pathname === "/ae/openbillrequest" || pathname === "/vships/openbillrequest";
+
+  const showRefreshButton = pathname === "/ae/general-ledger";
+  const showUploadButton = pathname === "/vships/general-ledger"; // only VShips General Ledger
+
   const isSpecialPage = isLedgerPage || isOpenBillPage;
 
   const searchPlaceholder = isVesselsPage
@@ -45,7 +59,6 @@ export const MainContentSection = ({
     ? "Search by Bill No / Vendor..."
     : "Search...";
 
-  /* ===== UTILS ===== */
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
   /* ===== FILE HANDLERS ===== */
@@ -69,11 +82,7 @@ export const MainContentSection = ({
 
     try {
       setUploading(true);
-
-      // 🔹 Force 2 seconds loader animation
-      await delay(2000);
-
-      // 🔹 Upload handled in parent
+      await delay(2000); // simulate upload delay
       await onUploadExcel(file);
 
       setToast({
@@ -91,6 +100,19 @@ export const MainContentSection = ({
       setUploading(false);
       e.target.value = "";
     }
+  };
+
+  /* ===== REFRESH HANDLER ===== */
+  const handleRefresh = async () => {
+    if (!onRefresh) return;
+    setRefreshing(true);
+    await onRefresh();
+    setRefreshing(false);
+    setToast({
+      open: true,
+      message: "Data refreshed successfully",
+      severity: "success",
+    });
   };
 
   return (
@@ -123,9 +145,7 @@ export const MainContentSection = ({
 
           <Chip
             label={
-              isSpecialPage
-                ? `${recordCount} Records`
-                : `${recordCount} Vessels`
+              isSpecialPage ? `${recordCount} Records` : `${recordCount} Vessels`
             }
             sx={{
               bgcolor: "#174bcc1a",
@@ -160,7 +180,27 @@ export const MainContentSection = ({
             }}
           />
 
-          {isSpecialPage && (
+          {/* REFRESH BUTTON */}
+          {showRefreshButton && (
+            <Button
+              variant="contained"
+              startIcon={
+                refreshing ? <CircularProgress size={18} color="inherit" /> : <RefreshIcon />
+              }
+              onClick={handleRefresh}
+              sx={{
+                textTransform: "none",
+                fontWeight: 600,
+                backgroundColor: "#184a70ff",
+              }}
+              disabled={refreshing}
+            >
+              {refreshing ? "Refreshing..." : "Refresh"}
+            </Button>
+          )}
+
+          {/* UPLOAD BUTTON */}
+          {showUploadButton && (
             <>
               <input
                 type="file"
@@ -169,19 +209,18 @@ export const MainContentSection = ({
                 accept=".xls,.xlsx"
                 onChange={handleFileChange}
               />
-
               <Button
                 variant="contained"
                 startIcon={
-                  uploading ? (
-                    <CircularProgress size={18} color="inherit" />
-                  ) : (
-                    <UploadFileIcon />
-                  )
+                  uploading ? <CircularProgress size={18} color="inherit" /> : <UploadFileIcon />
                 }
                 disabled={uploading}
                 onClick={handleButtonClick}
-                sx={{ textTransform: "none", fontWeight: 600, backgroundColor:"#184a70ff" }}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 600,
+                  backgroundColor: "#184a70ff",
+                }}
               >
                 {uploading ? "Uploading..." : "Upload Excel File"}
               </Button>
