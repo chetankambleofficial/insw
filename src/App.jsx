@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Box, Stack } from "@mui/material";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
-import { FilterSection } from "./sections/FilterSection/FilterSection";
-import { HeaderSection } from "./sections/HeaderSection/HeaderSection";
-import { MainContentSection } from "./sections/MainContentSection/MainContentSection";
-import { VesselTableSection } from "./sections/VesselTableSection/VesselTableSection";
-import GeneralLedgerTable from "./sections/GeneralLedger/GeneralLedgerTable";
-import OpenBillRequestSection from "./sections/OpenBillRequestSection/OpenBillRequestSection";
+import { FilterSection } from "./components/FilterSection/FilterSection";
+import { HeaderSection } from "./components/HeaderSection/HeaderSection";
+import { MainContentSection } from "./components/MainContentSection/MainContentSection";
+import { VesselTableSection } from "./components/VesselTableSection/VesselTableSection";
+import GeneralLedgerTable from "./components/GeneralLedger/GeneralLedgerTable";
+import OpenBillRequestSection from "./components/OpenBillRequestSection/OpenBillRequestSection";
 
 export const App = ({ section = "ae", page = "vessel" }) => {
   const location = useLocation();

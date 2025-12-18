@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Typography, Card, CardMedia } from "@mui/material";
-import { HeaderSection } from "./screens/Company/sections/HeaderSection/HeaderSection";
+import { HeaderSection } from "./components/HeaderSection/HeaderSection";
 import { useNavigate } from "react-router-dom";
 
 import "./Dashboard.css";

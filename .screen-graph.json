@@ -9,7 +9,7 @@
       "isRoot": true
     },
     {
-      "id": "src/screens/Company/App.jsx",
+      "id": "src/App.jsx",
       "label": "App",
       "routes": [
         "/ae/vessel",

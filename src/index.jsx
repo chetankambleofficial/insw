@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import { LoginPage } from "./login";
-import { App } from "./screens/Company/App";
+import { App } from "./App";
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
