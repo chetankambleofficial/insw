@@ -156,31 +156,57 @@ export const FilterSection = ({
               <CalendarMonthIcon sx={{ mr: 1, fontSize: 18 }} />
               Period
             </Typography>
+<DatePicker
+  label="Start Month - MM/YYYY"
+  views={["year", "month"]}
+  openTo="month"
+  value={startDate}
+  format="MM/YYYY"
+  onChange={(value) => {
+    if (!value) {
+      setStartDate(null);
+      setEndDate(null);
+      return;
+    }
+    setStartDate(value.startOf("month"));
+    setEndDate(value.endOf("month"));
+  }}
+  slotProps={{
+    textField: {
+      size: "small",
+      sx: {
+        "& input": {
+          fontSize: "15px",
+        },
+        "& label": {
+          fontSize: "15px",
+        },
+      },
+    },
+  }}
+/>
 
-            <DatePicker
-              label="Start Month"
-              views={["year", "month"]}
-              openTo="month"
-              value={startDate}
-              format="MM/YYYY"
-              onChange={(value) => {
-                if (!value) {
-                  setStartDate(null);
-                  setEndDate(null);
-                  return;
-                }
-                setStartDate(value.startOf("month"));
-                setEndDate(value.endOf("month"));
-              }}
-            />
+<DatePicker
+  label="End Month - MM/YYYY"
+  views={["year", "month"]}
+  value={endDate}
+  readOnly
+  format="MM/YYYY"
+  slotProps={{
+    textField: {
+      size: "small",
+      sx: {
+        "& input": {
+          fontSize: "15px",
+        },
+        "& label": {
+          fontSize: "15px",
+        },
+      },
+    },
+  }}
+/>
 
-            <DatePicker
-              label="End Month"
-              views={["year", "month"]}
-              value={endDate}
-              readOnly
-              format="MM/YYYY"
-            />
           </Stack>
         </Box>
       )}

@@ -54,9 +54,9 @@ export const MainContentSection = ({
   const searchPlaceholder = isVesselsPage
     ? "Search by Vessel Name or IMO..."
     : isLedgerPage
-    ? "Search by Document No / Accounting No..."
+    ? "Search by  Account code and Document No../"
     : isOpenBillPage
-    ? "Search by Bill No / Vendor..."
+    ? "Search by Vendor company name..."
     : "Search...";
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
